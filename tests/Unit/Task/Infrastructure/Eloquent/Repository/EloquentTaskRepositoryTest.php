@@ -25,11 +25,12 @@ class EloquentTaskRepositoryTest extends TestCase
             new TaskId('5f0e14ae-8afd-4151-9ef0-34791190f77c'),
             new TaskName('do the laundry please'),
         );
-        $this->taskModelMock->shouldReceive('create')
+        $this->taskModelMock->shouldReceive('updateOrCreate')
             ->once()
             ->withArgs([[
                 'id' => (string)$task->id,
                 'name' => (string)$task->name,
+                'status' => $task->status->value,
             ]]);
 
         $repository = new EloquentTaskRepository($this->taskModelMock);

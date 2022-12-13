@@ -18,7 +18,8 @@ class TaskController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Task with ID ' . $request->id . ' created successfully!',
+            'message' => 'New task created successfully!',
+            'data' => [ 'id' => $request->id ],
         ]);
     }
 }

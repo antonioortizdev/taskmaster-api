@@ -195,6 +195,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Source (from folder src/) Service Providers...
+         */
+        App\Providers\TaskServiceProvider::class,
+
     ],
 
     /*

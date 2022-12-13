@@ -31,7 +31,7 @@ final class Task extends Entity {
             new TaskName($primitives['name']),
         );
 
-        if ($primitives['status']) {
+        if (isset($primitives['status'])) {
             $task->status = TaskStatus::tryFrom($primitives['status']);
         }
 

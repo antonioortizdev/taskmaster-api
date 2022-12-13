@@ -6,6 +6,7 @@ use Src\Task\Domain\Task;
 use Src\Task\Domain\ValueObject\TaskId;
 use Src\Task\Domain\ValueObject\TaskName;
 use Tests\TestCase;
+use InvalidArgumentException;
 
 class TaskTest extends TestCase
 {
@@ -41,6 +42,19 @@ class TaskTest extends TestCase
     }
 
     public function testFromPrimitivesConvertsArrayToTaskObject()
+    {
+        $primitives = [
+            'id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0',
+            'name' => 'do the laundry',
+        ];
+        $task = Task::fromPrimitives($primitives);
+
+        $this->assertEquals(new TaskId($primitives['id']), $task->id);
+        $this->assertEquals(new TaskName($primitives['name']), $task->name);
+        $this->assertSame(TaskStatus::PENDING, $task->status);
+    }
+
+    public function testFromPrimitivesPassingStatusConvertsArrayToTaskObject()
     {
         $inProgressStatus = 1;
         $primitives = [

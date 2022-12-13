@@ -14,13 +14,11 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): JsonResponse
     {
-        $task = Task::fromPrimitives($request->all());
-
-        ($this->createTaskUseCase)($task);
+        ($this->createTaskUseCase)($request->all());
 
         return response()->json([
             'status' => 200,
-            'data' => $task->toPrimitives(),
+            'message' => 'Task with ID ' . $request->id . ' created successfully!',
         ]);
     }
 }

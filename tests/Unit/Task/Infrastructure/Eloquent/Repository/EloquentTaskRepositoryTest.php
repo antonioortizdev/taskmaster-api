@@ -27,11 +27,15 @@ class EloquentTaskRepositoryTest extends TestCase
         );
         $this->taskModelMock->shouldReceive('updateOrCreate')
             ->once()
-            ->withArgs([[
-                'id' => (string)$task->id,
-                'name' => (string)$task->name,
-                'status' => $task->status->value,
-            ]]);
+            ->withArgs([
+                [
+                    'id' => (string)$task->id,
+                ],
+                [
+                    'name' => (string)$task->name,
+                    'status' => $task->status->value,
+                ],
+            ]);
 
         $repository = new EloquentTaskRepository($this->taskModelMock);
         $repository->save($task);

@@ -12,9 +12,7 @@ class EloquentTaskRepository implements TaskRepository
     public function save(Task $task): void
     {
         $this->taskModel->updateOrCreate(
-            [
-                'id' => (string)$task->id,
-            ],
+            [ 'id' => (string)$task->id ],
             [
                 'name' => (string)$task->name,
                 'status' => $task->status->value,

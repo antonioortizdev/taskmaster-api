@@ -1,26 +1,36 @@
 <?php
 
 namespace Tests\Unit\Task\Application\UseCase;
+
+use Mockery;
 use Src\Task\Application\UseCase\CreateTask;
 use Src\Task\Domain\Repository\TaskRepository;
 use Src\Task\Domain\Task;
 use Tests\TestCase;
 
-final class CreateTaskTest extends TestCase
+class CreateTaskTest extends TestCase
 {
+    private $repositoryMock, $createTaskUseCase;
+
+    public function setUp(): void
+    {
+        $this->repositoryMock = Mockery::mock(TaskRepository::class);
+        $this->createTaskUseCase = new CreateTask($this->repositoryMock);
+    }
+
     public function testInvokeSavesTask()
     {
-        $newTaskData = [
+        $newData = [
             'id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0',
             'name' => 'do the laundry',
         ];
-        $mockRepository = $this->createMock(TaskRepository::class);
+        $task = Task::fromPrimitives($newData);
 
-        $mockRepository->expects($this->once())
-            ->method('save')
-            ->with(Task::fromPrimitives($newTaskData));
+        $this->repositoryMock->shouldReceive('save')
+            ->once()
+            ->withArgs([$task])
+            ->andReturn();
 
-        $createTask = new CreateTask($mockRepository);
-        $createTask($newTaskData);
+        ($this->createTaskUseCase)($newData);
     }
 }

@@ -24,7 +24,7 @@ final class Task extends Entity {
         ];
     }
 
-    public static function fromPrimitives(array $primitives): static
+    public static function fromPrimitives(array $primitives): Task
     {
         $task = new Task(
             new TaskId($primitives['id']),

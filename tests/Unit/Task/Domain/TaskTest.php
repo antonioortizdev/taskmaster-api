@@ -6,7 +6,6 @@ use Src\Task\Domain\Task;
 use Src\Task\Domain\ValueObject\TaskId;
 use Src\Task\Domain\ValueObject\TaskName;
 use Tests\TestCase;
-use InvalidArgumentException;
 
 class TaskTest extends TestCase
 {

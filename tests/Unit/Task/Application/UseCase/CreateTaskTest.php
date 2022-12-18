@@ -4,33 +4,51 @@ namespace Tests\Unit\Task\Application\UseCase;
 
 use Mockery;
 use Src\Task\Application\UseCase\CreateTask;
+use Src\Task\Domain\Exception\TaskAlreadyExistsException;
 use Src\Task\Domain\Repository\TaskRepository;
 use Src\Task\Domain\Task;
 use Tests\TestCase;
 
 class CreateTaskTest extends TestCase
 {
-    private $repositoryMock, $createTaskUseCase;
-
-    public function setUp(): void
+    public function testCreateTask()
     {
-        $this->repositoryMock = Mockery::mock(TaskRepository::class);
-        $this->createTaskUseCase = new CreateTask($this->repositoryMock);
+        $taskData = [
+            'id' => '5f0e14ae-8afd-4151-9ef0-34791190f77c',
+            'name' => 'do the laundry please',
+        ];
+
+        $task = Task::fromPrimitives($taskData);
+
+        $repositoryMock = Mockery::mock(TaskRepository::class);
+        $repositoryMock->shouldReceive('find')
+            ->withArgs([['id' => '5f0e14ae-8afd-4151-9ef0-34791190f77c']])
+            ->andReturn([]);
+        $repositoryMock->shouldReceive('save')
+            ->withArgs([$task])
+            ->once();
+
+        $useCase = new CreateTask($repositoryMock);
+        $useCase($taskData);
     }
 
-    public function testInvokeSavesTask()
+    public function testCreateTaskAlreadyExists()
     {
-        $newData = [
-            'id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0',
-            'name' => 'do the laundry',
+        $taskData = [
+            'id' => '5f0e14ae-8afd-4151-9ef0-34791190f77c',
+            'name' => 'do the laundry please',
         ];
-        $task = Task::fromPrimitives($newData);
 
-        $this->repositoryMock->shouldReceive('save')
-            ->once()
-            ->withArgs([$task])
-            ->andReturn();
+        $task = Task::fromPrimitives($taskData);
 
-        ($this->createTaskUseCase)($newData);
+        $repositoryMock = Mockery::mock(TaskRepository::class);
+        $repositoryMock->shouldReceive('find')
+            ->withArgs([['id' => '5f0e14ae-8afd-4151-9ef0-34791190f77c']])
+            ->andReturn([$task]);
+        $repositoryMock->shouldNotReceive('save');
+
+        $useCase = new CreateTask($repositoryMock);
+        $this->expectException(TaskAlreadyExistsException::class);
+        $useCase($taskData);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Src\Task\Application\UseCase\CreateTask;
+use Src\Task\Domain\Exception\TaskAlreadyExistsException;
 
 class TaskController extends Controller
 {
@@ -12,12 +14,17 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): JsonResponse
     {
-        ($this->createTaskUseCase)($request->all());
+        try {
+            ($this->createTaskUseCase)($request->all());
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'New task created successfully!',
-            'data' => [ 'id' => $request->id ],
-        ]);
+            return new JsonResponse([
+                'message' => 'New task created successfully!',
+                'data' => [ 'id' => $request->id ],
+            ], Response::HTTP_OK);
+        } catch (TaskAlreadyExistsException $e) {
+            return new JsonResponse([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

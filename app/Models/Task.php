@@ -9,5 +9,7 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $casts = ['id' => 'string'];
+
     public $fillable = ['id', 'name', 'status'];
 }

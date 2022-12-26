@@ -26,6 +26,7 @@ class StoreTaskRequest extends FormRequest
         return [
             'id' => 'required|uuid',
             'name' => 'required|string',
+            'status' => 'number',
         ];
     }
 }

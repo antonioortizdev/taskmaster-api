@@ -8,7 +8,9 @@ use Src\Task\Domain\Task;
 
 class CreateTask
 {
-    public function __construct(private TaskRepository $repository) {}
+    public function __construct(
+        private TaskRepository $repository,
+    ) {}
 
     public function __invoke(array $taskData): void
     {

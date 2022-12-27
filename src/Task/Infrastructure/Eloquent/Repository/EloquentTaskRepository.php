@@ -1,9 +1,12 @@
 <?php
 
 namespace Src\Task\Infrastructure\Eloquent\Repository;
+use Src\Task\Domain\Enum\TaskStatus;
 use Src\Task\Domain\Repository\TaskRepository;
 use Src\Task\Domain\Task;
 use App\Models\Task as TaskModel;
+use Src\Task\Domain\ValueObject\TaskId;
+use Src\Task\Domain\ValueObject\TaskName;
 
 class EloquentTaskRepository implements TaskRepository
 {

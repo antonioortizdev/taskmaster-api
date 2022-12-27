@@ -12,6 +12,5 @@ interface TaskRepository
      * @return Task[]
      */
     public function find(array $filters): array;
-
     public function save(Task $task): void;
 }

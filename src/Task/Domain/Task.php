@@ -7,7 +7,7 @@ use Src\Task\Domain\ValueObject\TaskId;
 use Src\Task\Domain\ValueObject\TaskName;
 
 final class Task extends Entity {
-    public const SEARCHABLE_FILTERS = ['name', 'status'];
+    public const SEARCHABLE_FIELDS = ['name', 'status'];
 
     public function __construct(
         TaskId $id,

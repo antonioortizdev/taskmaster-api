@@ -4,6 +4,7 @@ namespace Tests\Unit\Task\Application\UseCase;
 
 use Mockery;
 use Mockery\MockInterface;
+use InvalidArgumentException;
 use Src\Task\Application\UseCase\SearchTasks;
 use Src\Task\Domain\Repository\TaskRepository;
 use Src\Task\Domain\Task;
@@ -44,5 +45,12 @@ class SearchTasksTest extends TestCase
             ->andReturn($tasks);
 
         $this->assertEquals($tasks, ($this->useCase)($filters));
+    }
+
+    public function testInvokeThrowsInvalidArgumentException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Field 'id' is not a valid field.");
+        ($this->useCase)(['id' => 'd0261842-c398-4a2b-97ad-2377ce6b7fc8']);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use Exception;
+use InvalidArgumentException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Src\Task\Application\UseCase\CreateTask;
@@ -44,8 +45,11 @@ class TaskController extends Controller
                 ($this->searchTasksUseCase)($request->all()),
                 Response::HTTP_OK,
             );
+        } catch (InvalidArgumentException $e) {
+            return new JsonResponse([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
-            throw $e;
             return new JsonResponse([
                 'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);

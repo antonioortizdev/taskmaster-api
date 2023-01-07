@@ -11,7 +11,12 @@ class FindTaskById
 {
     public function __construct(private TaskRepository $repository) {}
 
-    public function __invoke(string $id): Task
+    public function __invoke(string $id): array
+    {
+        return $this->tryToFindTaskById($id)->toPrimitives();
+    }
+
+    private function tryToFindTaskById(string $id): Task
     {
         $tasksFound = $this->repository->find([ 'id' => $id ]);
 

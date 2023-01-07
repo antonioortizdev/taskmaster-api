@@ -9,7 +9,7 @@ use Src\Task\Domain\Task;
 use Src\Task\Domain\Exception\TaskNotFoundException;
 use Tests\TestCase;
 
-class FindATaskByIdTest extends TestCase
+class FindTaskByIdTest extends TestCase
 {
     private $repositoryMock, $findATaskByIdUseCase;
 
@@ -19,30 +19,37 @@ class FindATaskByIdTest extends TestCase
         $this->findATaskByIdUseCase = new FindTaskById($this->repositoryMock);
     }
 
-    public function testInvokeSavesTask()
+    public function testInvokeFindsTaskSuccessfully()
     {
+        $task = Task::fromPrimitives([
+            'id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0',
+            'name' => 'do the laundry',
+        ]);
         $id = 'b1f78b1e-620e-4adb-b752-94d24f76abc0';
-
         $this->repositoryMock->shouldReceive('find')
             ->once()
-            ->with([ 'id' => $id ])
-            ->andReturn([
-                Task::fromPrimitives([
-                    'id' => $id,
-                    'name' => 'do the laundry',
-                ])
-            ]);
+            ->withArgs([
+                ['id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0'],
+            ])
+            ->andReturn([$task]);
 
-        ($this->findATaskByIdUseCase)($id);
+        $result = ($this->findATaskByIdUseCase)($id);
+
+        $this->assertEquals([
+            'id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0',
+            'name' => 'do the laundry',
+            'status' => 0,
+        ], $result);
     }
 
     public function testInvokeThrowsTaskNotFoundException()
     {
         $id = 'b1f78b1e-620e-4adb-b752-94d24f76abc0';
-
         $this->repositoryMock->shouldReceive('find')
             ->once()
-            ->with([ 'id' => $id ])
+            ->withArgs([
+                ['id' => 'b1f78b1e-620e-4adb-b752-94d24f76abc0'],
+            ])
             ->andReturn([]);
 
         $this->expectException(TaskNotFoundException::class);

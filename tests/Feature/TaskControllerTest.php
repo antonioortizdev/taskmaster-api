@@ -163,4 +163,33 @@ class TaskControllerTest extends TestCase
             'message' => 'Field \'invalid_field\' is not a valid field.',
         ]);
     }
+
+    public function testItReturnsOkResponseWhenFindingTask()
+    {
+        $task1 = new Task([
+            'id' => 'c8f81724-5145-42d4-806f-8e510ac8a394',
+            'name' => 'do the laundry',
+            'status' => 1,
+        ]);
+        $task1->save();
+
+        $response = $this->json('GET', '/api/v1/tasks/c8f81724-5145-42d4-806f-8e510ac8a394');
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJson([
+            'id' => 'c8f81724-5145-42d4-806f-8e510ac8a394',
+            'name' => 'do the laundry',
+            'status' => 1,
+        ]);
+    }
+
+    public function testItReturnsNotFoundResponseWhenTryingToFindNonExistentTask()
+    {
+        $response = $this->json('GET', '/api/v1/tasks/01788ca7-6640-4f75-b1f8-11e9ca326d4c');
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        $response->assertJson([
+            'message' => 'Task with ID 01788ca7-6640-4f75-b1f8-11e9ca326d4c not found.',
+        ]);
+    }
 }

@@ -23,10 +23,6 @@ class SearchTasksTest extends TestCase
 
     public function testInvokeFindsMultipleTasks()
     {
-        $filters = [
-            'name' => 'do the laundry',
-            'status' => 0,
-        ];
         $task1 = Task::fromPrimitives([
             'id' => 'e48bf15a-ccaa-41ef-b7ce-402f2da40a48',
             'name' => 'do the laundry',
@@ -37,21 +33,36 @@ class SearchTasksTest extends TestCase
             'name' => 'do the laundry please',
             'status' => 0,
         ]);
-        $tasks = [$task1, $task2];
-        $tasksPrimitives = array_map(fn(Task $task) => $task->toPrimitives(), $tasks);
-
+        $filters = [
+            'name' => 'do the laundry',
+            'status' => 0,
+        ];
         $this->repository->shouldReceive('find')
             ->once()
             ->withArgs([$filters])
-            ->andReturn($tasks);
+            ->andReturn([$task1, $task2]);
 
-        $this->assertEquals($tasksPrimitives, ($this->useCase)($filters));
+        $result = ($this->useCase)($filters);
+
+        $this->assertEquals([
+            [
+                'id' => 'e48bf15a-ccaa-41ef-b7ce-402f2da40a48',
+                'name' => 'do the laundry',
+                'status' => 0,
+            ],
+            [
+                'id' => '9ad5f3f3-2d79-4cf4-8c7d-fbaf1a2a5d38',
+                'name' => 'do the laundry please',
+                'status' => 0,
+            ],
+        ], $result);
     }
 
     public function testInvokeThrowsInvalidArgumentException()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Field 'id' is not a valid field.");
+
         ($this->useCase)(['id' => 'd0261842-c398-4a2b-97ad-2377ce6b7fc8']);
     }
 }

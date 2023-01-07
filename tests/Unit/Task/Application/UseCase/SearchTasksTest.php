@@ -38,13 +38,14 @@ class SearchTasksTest extends TestCase
             'status' => 0,
         ]);
         $tasks = [$task1, $task2];
+        $tasksPrimitives = array_map(fn(Task $task) => $task->toPrimitives(), $tasks);
 
         $this->repository->shouldReceive('find')
             ->once()
             ->withArgs([$filters])
             ->andReturn($tasks);
 
-        $this->assertEquals($tasks, ($this->useCase)($filters));
+        $this->assertEquals($tasksPrimitives, ($this->useCase)($filters));
     }
 
     public function testInvokeThrowsInvalidArgumentException()

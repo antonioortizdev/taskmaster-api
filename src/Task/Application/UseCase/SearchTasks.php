@@ -21,7 +21,8 @@ class SearchTasks
     public function __invoke(array $filters): array
     {
         $this->ensureFiltersAreValid(array_keys($filters));
-        return $this->repository->find($filters);
+        $foundTasks = $this->repository->find($filters);
+        return array_map(fn(Task $task) => $task->toPrimitives(), $foundTasks);
     }
 
     /**

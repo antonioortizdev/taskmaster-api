@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Tests\TestCase;
 
-class TaskControllerTest extends FeatureTestCase
+class TaskControllerTest extends TestCase
 {
-    use WithFaker;
+    use RefreshDatabase, WithFaker;
 
     public function testItReturnsOkResponseWhenStoringTask()
     {
